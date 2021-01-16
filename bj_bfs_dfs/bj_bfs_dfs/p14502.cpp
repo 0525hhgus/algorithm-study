@@ -7,21 +7,23 @@
 
 using namespace std;
 
-int n = 0;
-int m = 0;
-int max_space = 0;
+int m = 0; // 너비
+int n = 0; // 높이
 
+int max_space = 0; // 최대 안전(0) 공간
+
+// 방향 배열
 int dx[4] = { 0, 0, 1, -1 };
 int dy[4] = { 1, -1, 0, 0 };
 
-int lab[8][8];
-int temp_lab[8][8];
-int virus_lab[8][8];
+int lab[8][8]; // 연구소
+int temp_lab[8][8]; // 벽을 세울 연구소
+int virus_lab[8][8]; // 바이러스가 퍼진 연구소
 
 bool visited[8][8] = { false };
 
 void bfs(int x, int y) {
-	queue<pair <int, int>> qsearch;
+	queue<pair <int, int>> qsearch; // 좌표상 위치
 	qsearch.push(make_pair(x, y));
 	visited[x][y] = true;
 
@@ -40,17 +42,17 @@ void bfs(int x, int y) {
 
 			//방문하지 않았고 벽이 아닌 경우
 			if (visited[nx][ny] == false && virus_lab[nx][ny] == 0) { 
-				virus_lab[nx][ny] = 2; //바이러스를 퍼뜨림
+				virus_lab[nx][ny] = 2; // 바이러스를 퍼뜨림
 				visited[nx][ny] = true;
 				qsearch.push(make_pair(nx, ny)); 
 			}
-
 		}
 	}
 }
 
 void spread_virus() {
 	
+	// 벽을 세운 배열 복사 및 방문 여부 초기화
 	for (unsigned int i = 0; i < (unsigned)m; i++) {
 		for (unsigned int j = 0; j < (unsigned)n; j++) {
 			virus_lab[i][j] = temp_lab[i][j];
@@ -58,7 +60,7 @@ void spread_virus() {
 		}
 	}
 
-
+	// 바이러스 퍼뜨림 (bfs)
 	for (unsigned int i = 0; i < (unsigned)m; i++) {
 		for (unsigned int j = 0; j < (unsigned)n; j++) {
 			if (virus_lab[i][j] == 2) {
@@ -67,6 +69,7 @@ void spread_virus() {
 		}
 	}
 
+	// 안전(0) 구역 크기
 	int safe = 0;
 	for (unsigned int i = 0; i < (unsigned)m; i++) {
 		for (unsigned int j = 0; j < (unsigned)n; j++) {
@@ -76,9 +79,8 @@ void spread_virus() {
 		}
 	}
 
+	// 최대 안전 구역 저장
 	max_space = max(max_space, safe);
-
-
 }
 
 
@@ -113,16 +115,6 @@ int main() {
 			scanf("%d", &lab[i][j]);
 		}
 	}
-
-	/*
-	
-	for (unsigned int i = 0; i < (unsigned)m; i++) {
-		for (unsigned int j = 0; j < (unsigned)n; j++) {
-			cout << lab[i][j] << " ";
-		}
-		cout << "\n";
-	}
-	*/
 	
 	// 벽을 세울 임시 연구실로 복사
 	for (unsigned int i = 0; i < (unsigned)m; i++) {
@@ -142,7 +134,7 @@ int main() {
 		}
 	}
 
-	cout << max_space;
+	printf("%d", max_space);
 
 	return 0;
 }
